@@ -1,5 +1,19 @@
 import { useTheme } from './ThemeProvider';
-import { ExternalLink, Code2, Globe, Terminal, Database, Palette, Cpu } from 'lucide-react';
+import { ExternalLink, Code2, Terminal, Database, Globe, Cpu, Palette, Layers } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+interface GitHubProject {
+  id: number;
+  name: string;
+  description: string | null;
+  url: string;
+  stars: number;
+  forks: number;
+  language: string | null;
+  topics: string[];
+  updated_at: string;
+  homepage: string | null;
+}
 
 interface Project {
   id: string;
@@ -8,65 +22,109 @@ interface Project {
   tags: string[];
   icon: React.ReactNode;
   link?: string;
-  github?: string;
+  github: string;
+  stars: number;
+  forks: number;
+  language: string;
 }
 
-const projects: Project[] = [
-  {
-    id: '1',
-    title: 'TieBlog',
-    description: '炫技个人博客 — 裸眼3D Teto环绕 + 环境光系统 + Agent集成',
-    tags: ['React', 'Tailwind', 'CSS 3D'],
-    icon: <Palette size={24} />,
-    github: '#',
-    link: '#',
-  },
-  {
-    id: '2',
-    title: 'AI Chat Platform',
-    description: '基于大语言模型的智能对话平台，支持多轮上下文理解',
-    tags: ['TypeScript', 'OpenAI', 'Next.js'],
-    icon: <Cpu size={24} />,
-    github: '#',
-    link: '#',
-  },
-  {
-    id: '3',
-    title: 'Data Visualization Engine',
-    description: '高性能数据可视化引擎，支持实时流数据渲染',
-    tags: ['D3.js', 'WebGL', 'React'],
-    icon: <Database size={24} />,
-    github: '#',
-  },
-  {
-    id: '4',
-    title: 'DevTools Suite',
-    description: '开发者工具套件，包含代码生成、调试、部署一站式工具',
-    tags: ['Electron', 'Node.js', 'CLI'],
-    icon: <Terminal size={24} />,
-    github: '#',
-  },
-  {
-    id: '5',
-    title: 'Web3 Dashboard',
-    description: '去中心化应用仪表盘，支持多链资产管理和交易分析',
-    tags: ['Solidity', 'Ethers.js', 'Vue'],
-    icon: <Globe size={24} />,
-    github: '#',
-    link: '#',
-  },
-  {
-    id: '6',
-    title: 'Code Playground',
-    description: '在线代码编辑运行环境，支持多种语言和实时协作',
-    tags: ['WebAssembly', 'Monaco', 'Socket.io'],
-    icon: <Code2 size={24} />,
-    github: '#',
-  },
-];
+// 语言到图标的映射
+const languageIcons: Record<string, React.ReactNode> = {
+  TypeScript: <Code2 size={24} />,
+  JavaScript: <Code2 size={24} />,
+  Python: <Terminal size={24} />,
+  Go: <Database size={24} />,
+  Rust: <Globe size={24} />,
+  GLSL: <Palette size={24} />,
+  HTML: <Layers size={24} />,
+  CSS: <Layers size={24} />,
+  Vue: <Layers size={24} />,
+  React: <Cpu size={24} />,
+};
+
+function getIcon(language: string | null): React.ReactNode {
+  if (!language) return <Code2 size={24} />;
+  return languageIcons[language] || <Code2 size={24} />;
+}
 
 export default function Projects() {
   const { currentTheme } = useTheme();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    fetch('/projects.json')
+      .then((r) => {
+        if (!r.ok) throw new Error('Failed to load');
+        return r.json();
+      })
+      .then((data: GitHubProject[]) => {
+        // 按 stars 降序，最多 12 个
+        const sorted = data
+          .sort((a, b) => b.stars - a.stars)
+          .slice(0, 12);
+
+        const mapped: Project[] = sorted.map((p) => ({
+          id: p.id.toString(),
+          title: p.name,
+          description: p.description || '暂无描述',
+          tags: [p.language || 'Unknown', ...p.topics.slice(0, 3)],
+          icon: getIcon(p.language),
+          link: p.homepage || undefined,
+          github: p.url,
+          stars: p.stars,
+          forks: p.forks,
+          language: p.language || 'Unknown',
+        }));
+
+        setProjects(mapped);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="projects" className="relative w-full py-24 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center gap-4 mb-12">
+            <div className="w-12 h-px" style={{ background: currentTheme.glowColor }} />
+            <h2 className="text-3xl md:text-4xl font-bold" style={{ color: currentTheme.textColor }}>
+              项目展示
+            </h2>
+          </div>
+          <div className="text-center py-12">
+            <div className="inline-block w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: currentTheme.glowColor }} />
+            <p className="mt-4 text-sm" style={{ color: `${currentTheme.textColor}60` }}>加载项目中...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error || projects.length === 0) {
+    return (
+      <section id="projects" className="relative w-full py-24 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center gap-4 mb-12">
+            <div className="w-12 h-px" style={{ background: currentTheme.glowColor }} />
+            <h2 className="text-3xl md:text-4xl font-bold" style={{ color: currentTheme.textColor }}>
+              项目展示
+            </h2>
+          </div>
+          <div className="text-center py-12">
+            <p className="text-sm" style={{ color: `${currentTheme.textColor}60` }}>
+              暂无项目数据。请检查 GitHub Actions 是否已运行，或项目配置是否正确。
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="projects" className="relative w-full py-24 px-4">
@@ -98,15 +156,20 @@ export default function Projects() {
               />
 
               <div className="relative z-10">
-                {/* 图标 */}
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{
-                    background: `${currentTheme.glowColor}15`,
-                    color: currentTheme.glowColor,
-                  }}
-                >
-                  {project.icon}
+                {/* 图标 + 语言 */}
+                <div className="flex items-center justify-between mb-4">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{
+                      background: `${currentTheme.glowColor}15`,
+                      color: currentTheme.glowColor,
+                    }}
+                  >
+                    {project.icon}
+                  </div>
+                  <span className="text-xs font-mono" style={{ color: `${currentTheme.textColor}40` }}>
+                    {project.language}
+                  </span>
                 </div>
 
                 {/* 标题 */}
@@ -136,28 +199,36 @@ export default function Projects() {
                   ))}
                 </div>
 
-                {/* 链接 */}
-                <div className="flex gap-3">
-                  {project.github && (
+                {/* 统计 + 链接 */}
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-3 text-xs" style={{ color: `${currentTheme.textColor}40` }}>
+                    <span>★ {project.stars}</span>
+                    <span>⑂ {project.forks}</span>
+                  </div>
+                  <div className="flex gap-3">
                     <a
                       href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-1 text-xs transition-colors hover:opacity-80"
                       style={{ color: `${currentTheme.textColor}60` }}
                     >
                       <Code2 size={14} />
                       <span>源码</span>
                     </a>
-                  )}
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      className="flex items-center gap-1 text-xs transition-colors hover:opacity-80"
-                      style={{ color: currentTheme.glowColor }}
-                    >
-                      <ExternalLink size={14} />
-                      <span>访问</span>
-                    </a>
-                  )}
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs transition-colors hover:opacity-80"
+                        style={{ color: currentTheme.glowColor }}
+                      >
+                        <ExternalLink size={14} />
+                        <span>访问</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
