@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 export default async function handler(request: Request) {
   // 只允许 POST 请求
   if (request.method !== 'POST') {
