@@ -1,5 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'TianYu0321';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
