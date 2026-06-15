@@ -1,4 +1,10 @@
-/// <reference types="node" />
+declare const process: {
+  env: {
+    OPENAI_API_KEY?: string;
+    OPENAI_BASE_URL?: string;
+    OPENAI_MODEL?: string;
+  };
+};
 
 export default async function handler(request: Request) {
   // 只允许 POST 请求
