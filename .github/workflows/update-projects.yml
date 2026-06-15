@@ -1,0 +1,34 @@
+name: Update Projects
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天 UTC 0 点（北京时间 8:00）
+  workflow_dispatch:      # 支持手动触发
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch GitHub Projects
+        env:
+          GITHUB_USERNAME: ${{ github.repository_owner }}  # 使用仓库所有者用户名，更安全
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动提供，无需手动配置
+        run: node scripts/fetch-github.js
+
+      - name: Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/projects.json
+          git add public/projects-context.md
+          git diff --cached --quiet || git commit -m "chore: auto-update projects from GitHub"
+          git push

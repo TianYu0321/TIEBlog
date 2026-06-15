@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "TieBlog",
+    "description": "个人技术博客，裸眼3D Teto环绕 + AI Agent + 环境光音乐系统",
+    "url": "https://github.com/TieXe/TieBlog",
+    "stars": 42,
+    "forks": 8,
+    "language": "TypeScript",
+    "topics": ["react", "vite", "tailwindcss", "3d", "ai-agent"],
+    "updated_at": "2025-06-15T12:00:00Z",
+    "homepage": "https://tieblog.vercel.app"
+  },
+  {
+    "id": 2,
+    "name": "neural-viz",
+    "description": "神经网络可视化工具，支持实时训练过程可视化",
+    "url": "https://github.com/TieXe/neural-viz",
+    "stars": 128,
+    "forks": 23,
+    "language": "Python",
+    "topics": ["machine-learning", "visualization", "pytorch", "threejs"],
+    "updated_at": "2025-06-10T08:30:00Z",
+    "homepage": "https://neural-viz.demo"
+  },
+  {
+    "id": 3,
+    "name": "rust-wasm-image",
+    "description": "Rust + WebAssembly 高性能图片处理库，支持滤镜和格式转换",
+    "url": "https://github.com/TieXe/rust-wasm-image",
+    "stars": 256,
+    "forks": 45,
+    "language": "Rust",
+    "topics": ["webassembly", "rust", "image-processing", "performance"],
+    "updated_at": "2025-06-12T15:20:00Z",
+    "homepage": null
+  },
+  {
+    "id": 4,
+    "name": "mini-kv",
+    "description": "轻量级分布式 KV 存储，支持 Raft 共识算法",
+    "url": "https://github.com/TieXe/mini-kv",
+    "stars": 89,
+    "forks": 12,
+    "language": "Go",
+    "topics": ["distributed-systems", "raft", "kv-store", "database"],
+    "updated_at": "2025-05-28T09:10:00Z",
+    "homepage": null
+  },
+  {
+    "id": 5,
+    "name": "shader-lab",
+    "description": "WebGL Shader 实验集合，包含各种视觉效果和数学可视化",
+    "url": "https://github.com/TieXe/shader-lab",
+    "stars": 67,
+    "forks": 15,
+    "language": "GLSL",
+    "topics": ["webgl", "shader", "graphics", "math"],
+    "updated_at": "2025-06-08T18:45:00Z",
+    "homepage": "https://shader-lab.vercel.app"
+  }
+]

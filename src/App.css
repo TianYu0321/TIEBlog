@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --color-matrix-bg: #0a0f0a;
+  --color-matrix-glow: #00ff41;
+  --color-pure-bg: #0a0a0a;
+  --color-pure-glow: #ffffff;
+  --color-neon-bg: #0a0a12;
+  --color-neon-glow: #ff00aa;
+  --color-lofi-bg: #0d0a0f;
+  --color-lofi-glow: #ffa500;
+  --color-glitch-bg: #000000;
+  --color-glitch-glow: #ff0000;
+}
+
+html, body, #root {
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ====== 3D 立体矩形场景 ====== */
+.scene-3d {
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ====== 主视频：全屏覆盖，边缘渐变融入 ====== */
+.video-main {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.video-main video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 视频边缘渐变遮罩 — 消除硬切 */
+.video-edge-fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  background: radial-gradient(
+    ellipse 80% 70% at 50% 50%,
+    transparent 50%,
+    rgba(0,0,0,0.4) 85%,
+    rgba(0,0,0,0.8) 100%
+  );
+}
+
+/* 左右竖屏边缘遮罩 */
+.wall-edge-fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.wall-edge-fade.left-fade {
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.6) 0%,
+    transparent 40%,
+    transparent 100%
+  );
+}
+
+.wall-edge-fade.right-fade {
+  background: linear-gradient(
+    to left,
+    rgba(0,0,0,0.6) 0%,
+    transparent 40%,
+    transparent 100%
+  );
+}
+
+/* 竖屏视频白背景融合：降低亮度+对比度 */
+.video-wall video {
+  filter: brightness(0.85) contrast(1.15);
+}
+
+/* 视频框 */
+.video-wall {
+  position: absolute;
+  overflow: hidden;
+  z-index: 4;
+  background: rgba(0,0,0,0.3);
+}
+
+/* 立体墙面光晕 */
+.video-wall::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+
+/* 呼吸光晕 */
+@keyframes breathe {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+.glow-breathe {
+  animation: breathe 5s ease-in-out infinite;
+}
+
+/* 浮动动画 */
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+/* ====== 音乐播放器频谱动画 ====== */
+@keyframes equalizer {
+  0% { height: 10%; opacity: 0.3; }
+  50% { height: 100%; opacity: 0.9; }
+  100% { height: 20%; opacity: 0.5; }
+}
+
+@keyframes equalizer-paused {
+  0%, 100% { height: 15%; opacity: 0.3; }
+}
+
+/* 播放器卡片发光 */
+.player-glow {
+  box-shadow: 
+    0 0 60px var(--glow-color, rgba(0,255,65,0.08)),
+    0 8px 32px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* 进度条发光 */
+.progress-glow {
+  box-shadow: 0 0 10px var(--glow-color, rgba(0,255,65,0.4));
+}
