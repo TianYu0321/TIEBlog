@@ -6,6 +6,7 @@ interface GitHubProject {
   id: number;
   name: string;
   description: string | null;
+  summary: string;
   url: string;
   stars: number;
   forks: number;
@@ -19,6 +20,7 @@ interface Project {
   id: string;
   title: string;
   description: string;
+  summary: string;
   tags: string[];
   icon: React.ReactNode;
   link?: string;
@@ -26,6 +28,7 @@ interface Project {
   stars: number;
   forks: number;
   language: string;
+  updated_at: string;
 }
 
 // 语言到图标的映射
@@ -45,6 +48,21 @@ const languageIcons: Record<string, React.ReactNode> = {
 function getIcon(language: string | null): React.ReactNode {
   if (!language) return <Code2 size={24} />;
   return languageIcons[language] || <Code2 size={24} />;
+}
+
+// 辅助函数：格式化更新时间
+// 7 天内显示相对时间，7 天外显示绝对日期
+function formatDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDay = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDay <= 0) return '刚刚更新';
+  if (diffDay === 1) return '昨天';
+  if (diffDay < 7) return `${diffDay} 天前`;
+  // 7 天外显示绝对日期
+  return isoDate.split('T')[0];
 }
 
 export default function Projects() {
@@ -69,6 +87,7 @@ export default function Projects() {
           id: p.id.toString(),
           title: p.name,
           description: p.description || '暂无描述',
+          summary: p.summary || p.description || '暂无描述',
           tags: [p.language || 'Unknown', ...p.topics.slice(0, 3)],
           icon: getIcon(p.language),
           link: p.homepage || undefined,
@@ -76,6 +95,7 @@ export default function Projects() {
           stars: p.stars,
           forks: p.forks,
           language: p.language || 'Unknown',
+          updated_at: p.updated_at,
         }));
 
         setProjects(mapped);
@@ -177,9 +197,14 @@ export default function Projects() {
                   {project.title}
                 </h3>
 
-                {/* 描述 */}
+                {/* 描述：一句话总结，不截断 */}
                 <p className="text-sm leading-relaxed mb-4" style={{ color: `${currentTheme.textColor}80` }}>
-                  {project.description}
+                  {project.summary}
+                </p>
+
+                {/* 更新时间：7天内相对，7天外绝对 */}
+                <p className="text-[10px] font-mono mb-3" style={{ color: `${currentTheme.textColor}30` }}>
+                  {formatDate(project.updated_at)}
                 </p>
 
                 {/* 标签 */}

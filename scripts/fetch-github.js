@@ -1,10 +1,62 @@
 const fs = require('fs');
 const path = require('path');
 
-const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'TianYu0321';  // 替换为你的 GitHub 用户名
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;  // GitHub Actions 自动提供
+const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'TianYu0321';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const LLM_API_KEY = process.env.OPENAI_API_KEY;
+const LLM_BASE_URL = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1';
+const LLM_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+
+// 调用 LLM 生成一句话总结
+async function generateSummary(project) {
+  if (!LLM_API_KEY) {
+    console.warn(`⚠️ 未配置 OPENAI_API_KEY，跳过 ${project.name} 的 summary 生成`);
+    return project.description || '暂无描述';
+  }
+
+  const prompt = `请用一句话总结这个 GitHub 项目。格式："这是一个基于 [主要技术栈] 的 [项目功能] 项目。" 只返回一句话，不要多余内容。
+
+项目名：${project.name}
+语言：${project.language || '未知'}
+简介：${project.description || '无'}
+README 开头：${project.readme.slice(0, 500)}`;
+
+  try {
+    const response = await fetch(`${LLM_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${LLM_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: LLM_MODEL,
+        messages: [
+          { role: 'system', content: '你是一个技术文档总结助手。只返回一句话总结，不要任何解释。' },
+          { role: 'user', content: prompt },
+        ],
+        max_tokens: 100,
+        temperature: 0.3,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`LLM API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const summary = data.choices?.[0]?.message?.content?.trim();
+    if (summary) {
+      // 清理多余标点
+      return summary.replace(/^["'`]+|["'`]+$/g, '').trim();
+    }
+  } catch (e) {
+    console.error(`❌ ${project.name} summary 生成失败:`, e.message);
+  }
+
+  return project.description || '暂无描述';
+}
 
 async function fetchGitHub() {
   try {
@@ -30,10 +82,9 @@ async function fetchGitHub() {
 
     const repos = await reposRes.json();
 
-    // 2. 获取每个仓库的详细信息（语言、topics等）
+    // 2. 获取每个仓库的详细信息
     const projects = await Promise.all(
       repos.map(async (repo) => {
-        // 获取 README 内容（用于 LLM 上下文）
         let readme = '';
         try {
           const readmeRes = await fetch(
@@ -65,11 +116,18 @@ async function fetchGitHub() {
       })
     );
 
-    // 3. 写入 projects.json（前端展示用）
-    const projectsData = projects.map(p => ({
+    // 3. 用 LLM 生成每个项目的一句话总结
+    console.log(`🤖 Generating summaries for ${projects.length} projects...`);
+    const summaries = await Promise.all(
+      projects.map(p => generateSummary(p))
+    );
+
+    // 4. 写入 projects.json（前端展示用）
+    const projectsData = projects.map((p, i) => ({
       id: p.id,
       name: p.name,
       description: p.description,
+      summary: summaries[i],
       url: p.url,
       stars: p.stars,
       forks: p.forks,
@@ -85,10 +143,11 @@ async function fetchGitHub() {
     );
     console.log(`✅ projects.json updated (${projectsData.length} projects)`);
 
-    // 4. 生成 LLM 上下文（用于 Agent 系统提示）
-    const context = projects.map(p => {
+    // 5. 生成 LLM 上下文（用于 Agent 系统提示）
+    const context = projects.map((p, i) => {
       return `
 ## ${p.name}
+- 总结: ${summaries[i]}
 - 描述: ${p.description || '暂无描述'}
 - 语言: ${p.language || 'N/A'}
 - 标签: ${p.topics.join(', ') || '无'}

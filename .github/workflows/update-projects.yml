@@ -20,8 +20,11 @@ jobs:
 
       - name: Fetch GitHub Projects
         env:
-          GITHUB_USERNAME: ${{ github.repository_owner }}  # 使用仓库所有者用户名，更安全
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动提供，无需手动配置
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
         run: node scripts/fetch-github.js
 
       - name: Commit and Push
