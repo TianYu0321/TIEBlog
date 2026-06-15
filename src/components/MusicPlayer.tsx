@@ -26,16 +26,34 @@ export default function MusicPlayer() {
   const [showPlaylist, setShowPlaylist] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState('00:00');
-  const [volume, setVolume] = useState(0.8);
+  const [volume, setVolume] = useState(0.3);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isPlayingRef = useRef(isPlaying);
 
   const tracks = defaultTracks;
 
   const tryPlay = useCallback(() => {
     audioRef.current?.play().catch(() => {});
   }, []);
+
+  // 同步 isPlaying ref
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+
+  // 首次点击页面时自动播放（和视频同步）
+  useEffect(() => {
+    const handleClick = () => {
+      if (!isPlayingRef.current) {
+        tryPlay();
+        setIsPlaying(true);
+      }
+    };
+    window.addEventListener('click', handleClick, { once: true });
+    return () => window.removeEventListener('click', handleClick);
+  }, [tryPlay]);
 
   const togglePlay = useCallback(() => {
     if (isPlaying) {
@@ -295,16 +313,15 @@ export default function MusicPlayer() {
               <span>播放列表</span>
             </button>
 
-            {/* 音量控制：整个区域 hover 显示滑块，absolute 覆盖 */}
+            {/* 音量控制：滑块 + 按钮共享 hover 区域，避免滑块收起 */}
             <div
-              className="relative flex items-center justify-end"
-              style={{ width: '40px' }}
+              className="relative flex items-center"
               onMouseEnter={() => setShowVolumeSlider(true)}
               onMouseLeave={() => setShowVolumeSlider(false)}
             >
-              {/* 音量滑块：absolute 覆盖向左弹出，不挤压布局 */}
+              {/* 音量滑块：absolute 向左弹出，覆盖 hover 区域 */}
               <div
-                className="absolute right-8 top-1/2 -translate-y-1/2 flex items-center gap-2 transition-all duration-300 overflow-hidden pointer-events-none"
+                className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center gap-2 transition-all duration-300 overflow-hidden pointer-events-none"
                 style={{
                   width: showVolumeSlider ? '100px' : '0px',
                   opacity: showVolumeSlider ? 1 : 0,
@@ -338,7 +355,7 @@ export default function MusicPlayer() {
                   if (volume > 0) {
                     setVolume(0);
                   } else {
-                    setVolume(0.8);
+                    setVolume(0.3);
                   }
                 }}
               >
