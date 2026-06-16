@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTheme } from './ThemeProvider';
 
 // 视频文件路径
@@ -7,27 +7,30 @@ const VIDEO_MAIN = '/video/' + encodeURIComponent('6月15日.mp4');
 export default function TetoSurround() {
   const { currentTheme } = useTheme();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const tryPlay = useCallback(() => {
     videoRef.current?.play().catch(() => {});
   }, []);
 
   useEffect(() => {
-    const handleClick = () => tryPlay();
-    window.addEventListener('click', handleClick, { once: true });
-    return () => window.removeEventListener('click', handleClick);
+    const handler = () => tryPlay();
+    window.addEventListener('tieblog-first-click', handler, { once: true });
+    return () => window.removeEventListener('tieblog-first-click', handler);
   }, [tryPlay]);
 
   return (
     <div className="relative w-full h-full overflow-hidden" style={{ background: '#000' }}>
-      {/* 视频层：独立 GPU 图层 */}
+      {/* 视频层：独立 GPU 图层，缓入淡入 */}
       <div
         className="absolute inset-0"
         style={{
           transform: 'translateZ(0)',
-          willChange: 'transform',
+          willChange: 'transform, opacity',
           contain: 'layout style paint',
           zIndex: 1,
+          opacity: isLoaded ? 1 : 0,
+          transition: 'opacity 1.5s ease-out',
         }}
       >
         <video
@@ -43,7 +46,7 @@ export default function TetoSurround() {
             objectFit: 'cover',
             display: 'block',
           }}
-          onLoadedMetadata={tryPlay}
+          onLoadedData={() => setIsLoaded(true)}
         />
       </div>
 

@@ -45,14 +45,14 @@ export default function MusicPlayer() {
 
   // 首次点击页面时自动播放（和视频同步）
   useEffect(() => {
-    const handleClick = () => {
+    const handler = () => {
       if (!isPlayingRef.current) {
         tryPlay();
         setIsPlaying(true);
       }
     };
-    window.addEventListener('click', handleClick, { once: true });
-    return () => window.removeEventListener('click', handleClick);
+    window.addEventListener('tieblog-first-click', handler, { once: true });
+    return () => window.removeEventListener('tieblog-first-click', handler);
   }, [tryPlay]);
 
   const togglePlay = useCallback(() => {

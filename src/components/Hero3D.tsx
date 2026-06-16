@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme, themes } from './ThemeProvider';
 import TetoSurround from './TetoSurround';
 import AgentChat from './AgentChat';
@@ -8,6 +8,15 @@ import { ChevronDown, Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
 export default function Hero3D() {
   const { currentTheme, setTheme } = useTheme();
   const [showAgent, setShowAgent] = useState(false);
+
+  // 首次点击页面时广播事件，同步触发视频和音乐播放
+  useEffect(() => {
+    const handler = () => {
+      window.dispatchEvent(new CustomEvent('tieblog-first-click'));
+    };
+    window.addEventListener('click', handler, { once: true });
+    return () => window.removeEventListener('click', handler);
+  }, []);
 
   const scrollToProjects = () => {
     document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
