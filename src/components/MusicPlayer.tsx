@@ -313,13 +313,13 @@ export default function MusicPlayer() {
               <span>播放列表</span>
             </button>
 
-            {/* 音量控制：滑块 + 按钮共享 hover 区域，避免滑块收起 */}
+            {/* 音量控制：固定宽度覆盖整个区域，避免 hover 断裂 */}
             <div
-              className="relative flex items-center"
+              className="relative flex items-center justify-end w-[140px]"
               onMouseEnter={() => setShowVolumeSlider(true)}
               onMouseLeave={() => setShowVolumeSlider(false)}
             >
-              {/* 音量滑块：absolute 向左弹出，覆盖 hover 区域 */}
+              {/* 音量滑块：absolute 固定在按钮左侧 */}
               <div
                 className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center gap-2 transition-all duration-300 overflow-hidden pointer-events-none"
                 style={{
@@ -344,7 +344,7 @@ export default function MusicPlayer() {
                     }}
                   />
                 </div>
-                <span className="text-[10px] font-mono w-5 text-right" style={{ color: `${currentTheme.textColor}50` }}>
+                <span className="text-[10px] font-mono w-5 text-right pointer-events-none" style={{ color: `${currentTheme.textColor}50` }}>
                   {Math.round(volume * 100)}
                 </span>
               </div>
