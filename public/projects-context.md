@@ -10,7 +10,7 @@
 - 标签: 无
 - 星标: 0 ⭐
 - 链接: https://github.com/TianYu0321/TIEBlog
-- 更新: 2026-06-15T17:24:56Z
+- 更新: 2026-06-15T17:50:14Z
 - README摘要: # React + TypeScript + Vite  This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.  Currently, two official plugins are available:  - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs) - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)  ## React Compiler  The React Compiler is not enabled o
 
 ---
