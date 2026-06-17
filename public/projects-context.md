@@ -4,14 +4,14 @@
 
 
 ## TIEBlog
-- 总结: 这是一个基于 React、TypeScript 和 Vite 的博客项目。
+- 总结: 这是一个基于 TypeScript 的炫技型个人技术博客项目，集成了裸眼3D视频环绕、AI Agent聊天和环境光主题系统。
 - 描述: 暂无描述
 - 语言: TypeScript
 - 标签: 无
 - 星标: 0 ⭐
 - 链接: https://github.com/TianYu0321/TIEBlog
-- 更新: 2026-06-16T09:42:16Z
-- README摘要: # React + TypeScript + Vite  This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.  Currently, two official plugins are available:  - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs) - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)  ## React Compiler  The React Compiler is not enabled o
+- 更新: 2026-06-17T09:43:29Z
+- README摘要: # TieBlog  > Tie 的个人技术博客 — 裸眼3D Teto 视频环绕 + AI Agent + 环境光主题系统  **在线访问**: [https://tieblog.vercel.app](https://tieblog.vercel.app)  ---  ## 项目介绍  TieBlog 是一个**炫技型个人作品集网站**，核心目标是展示前端开发能力、AI 辅助开发实践，以及个人 GitHub 项目。  ### 核心特性  | 特性 | 说明 | |------|------| | **裸眼3D 视频环绕** | 全屏 Teto 视频背景，CSS 3D 缓入效果，GPU 加速渲染 | | **环境光主题系统** | 5 种预设主题（Matrix/Pure/Neon/Lo-Fi/Glitch），视频 + 音乐联动 | | **AI Agent 聊天** | 基于项目上下文的专属 AI，只回答技术问题，拒绝闲聊 | | **GitHub 自动同步** | 每周自动抓取 GitHub 仓库，LLM 生成一句话总结 | | **音乐播放器** | 右侧玻璃态面板，频谱可视化，
 
 ---
 
