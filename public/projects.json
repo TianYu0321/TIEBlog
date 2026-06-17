@@ -3,13 +3,13 @@
     "id": 1270330438,
     "name": "TIEBlog",
     "description": "",
-    "summary": "这是一个基于 React、TypeScript 和 Vite 的博客项目。",
+    "summary": "这是一个基于 TypeScript 的炫技型个人技术博客项目，集成了裸眼3D视频环绕、AI Agent聊天和环境光主题系统。",
     "url": "https://github.com/TianYu0321/TIEBlog",
     "stars": 0,
     "forks": 0,
     "language": "TypeScript",
     "topics": [],
-    "updated_at": "2026-06-16T09:42:16Z",
+    "updated_at": "2026-06-17T09:43:29Z",
     "homepage": "https://tieblog.vercel.app"
   },
   {
