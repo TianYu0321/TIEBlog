@@ -1,6 +1,6 @@
 import { useTheme } from './ThemeProvider';
 import { ExternalLink, Code2, Terminal, Database, Globe, Cpu, Palette, Layers } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 interface GitHubProject {
   id: number;
@@ -71,56 +71,39 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const sectionRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    fetch('/projects.json')
+      .then((r) => {
+        if (!r.ok) throw new Error('Failed to load');
+        return r.json();
+      })
+      .then((data: GitHubProject[]) => {
+        const sorted = data
+          .sort((a, b) => b.stars - a.stars)
+          .slice(0, 12);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          fetch('/projects.json')
-            .then((r) => {
-              if (!r.ok) throw new Error('Failed to load');
-              return r.json();
-            })
-            .then((data: GitHubProject[]) => {
-              const sorted = data
-                .sort((a, b) => b.stars - a.stars)
-                .slice(0, 12);
+        const mapped: Project[] = sorted.map((p) => ({
+          id: p.id.toString(),
+          title: p.name,
+          description: p.description || '暂无描述',
+          summary: p.summary || p.description || '暂无描述',
+          tags: [p.language || 'Unknown', ...p.topics.slice(0, 3)],
+          icon: getIcon(p.language),
+          link: p.homepage || undefined,
+          github: p.url,
+          stars: p.stars,
+          forks: p.forks,
+          language: p.language || 'Unknown',
+          updated_at: p.updated_at,
+        }));
 
-              const mapped: Project[] = sorted.map((p) => ({
-                id: p.id.toString(),
-                title: p.name,
-                description: p.description || '暂无描述',
-                summary: p.summary || p.description || '暂无描述',
-                tags: [p.language || 'Unknown', ...p.topics.slice(0, 3)],
-                icon: getIcon(p.language),
-                link: p.homepage || undefined,
-                github: p.url,
-                stars: p.stars,
-                forks: p.forks,
-                language: p.language || 'Unknown',
-                updated_at: p.updated_at,
-              }));
-
-              setProjects(mapped);
-              setLoading(false);
-            })
-            .catch(() => {
-              setError(true);
-              setLoading(false);
-            });
-
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
+        setProjects(mapped);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
   }, []);
 
   if (loading) {
@@ -163,7 +146,7 @@ export default function Projects() {
   }
 
   return (
-    <section ref={sectionRef} id="projects" className="relative w-full py-24 px-4">
+    <section id="projects" className="relative w-full py-24 px-4">
       <div className="max-w-6xl mx-auto">
         {/* 标题 */}
         <div className="flex items-center gap-4 mb-12">
