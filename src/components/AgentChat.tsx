@@ -65,6 +65,15 @@ export default function AgentChat({ onClose }: AgentChatProps) {
     inputRef.current?.focus();
   }, []);
 
+  // ESC 键关闭聊天
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [onClose]);
+
   // 发送消息
   const sendMessage = useCallback(async (retryInput?: string) => {
     const textToSend = (retryInput ?? input).trim();
@@ -92,11 +101,17 @@ export default function AgentChat({ onClose }: AgentChatProps) {
     // 截断消息历史：保留最近 MAX_HISTORY 轮（user + assistant）
     const truncatedHistory = currentMessages.slice(-MAX_HISTORY);
 
+    // 动态注入当前日期
+    const today = new Date().toISOString().split('T')[0];
+    const systemContent = SYSTEM_PROMPT + `\n\n当前日期：${today}` + (currentContext ? '\n\n项目数据：\n' + currentContext.slice(0, 3000) : '');
+
     // 创建 AbortController 用于超时
     abortRef.current = new AbortController();
     const timeoutId = setTimeout(() => {
       abortRef.current?.abort();
     }, REQUEST_TIMEOUT);
+
+    let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
 
     try {
       const response = await fetch('/api/chat', {
@@ -105,7 +120,7 @@ export default function AgentChat({ onClose }: AgentChatProps) {
         signal: abortRef.current.signal,
         body: JSON.stringify({
           messages: [
-            { role: 'system', content: SYSTEM_PROMPT + (currentContext ? '\n\n项目数据：\n' + currentContext.slice(0, 3000) : '') },
+            { role: 'system', content: systemContent },
             ...truncatedHistory.map((m) => ({ role: m.role, content: m.content })),
             { role: 'user', content: userMessage.content },
           ],
@@ -124,7 +139,7 @@ export default function AgentChat({ onClose }: AgentChatProps) {
       }
 
       // 流式读取响应
-      const reader = response.body?.getReader();
+      reader = response.body?.getReader();
       if (!reader) throw new Error('No response body');
 
       const assistantId = (Date.now() + 1).toString();
@@ -200,6 +215,7 @@ export default function AgentChat({ onClose }: AgentChatProps) {
       ]);
     } finally {
       clearTimeout(timeoutId);
+      reader?.cancel().catch(() => {}); // 取消 SSE 流读取
       abortRef.current = null;
       setIsLoading(false);
     }
@@ -399,6 +415,4 @@ const SYSTEM_PROMPT = `你是 TieBlog 的专属 AI Agent。你的唯一职责是
 
 ## 拒绝模板：
 "抱歉，我的职责是回答 TieBlog 项目相关的技术问题。关于 [用户话题] 我无法回答，请问我可以帮你了解项目的技术细节吗？"
-
-当前日期：${new Date().toISOString().split('T')[0]}
 `;

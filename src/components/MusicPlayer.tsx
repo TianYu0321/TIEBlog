@@ -32,6 +32,11 @@ export default function MusicPlayer() {
   const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const isPlayingRef = useRef(isPlaying);
 
+  // 频谱可视化：固定随机种子，避免每次 re-render 跳动
+  const triggerHeights = useRef(Array.from({ length: 3 }, () => 12 + Math.random() * 16));
+  const spectrumHeights = useRef(Array.from({ length: 24 }, () => 20 + Math.random() * 80));
+  const spectrumDurations = useRef(Array.from({ length: 24 }, () => 0.3 + Math.random() * 0.8));
+
   const tracks = defaultTracks;
 
   const tryPlay = useCallback(() => {
@@ -152,7 +157,7 @@ export default function MusicPlayer() {
                 key={i}
                 className="w-1 rounded-full transition-all"
                 style={{
-                  height: isPlaying ? `${12 + Math.random() * 16}px` : '4px',
+                  height: isPlaying ? `${triggerHeights.current[i]}px` : '4px',
                   background: currentTheme.glowColor,
                   opacity: isPlaying ? 0.8 : 0.4,
                   animation: isPlaying ? `equalizer ${0.5 + i * 0.2}s ease-in-out infinite alternate` : 'none',
@@ -187,10 +192,10 @@ export default function MusicPlayer() {
                 key={i}
                 className="w-[3px] rounded-full transition-all"
                 style={{
-                  height: isPlaying ? `${20 + Math.random() * 80}%` : '15%',
+                  height: isPlaying ? `${spectrumHeights.current[i]}%` : '15%',
                   background: `linear-gradient(to top, ${currentTheme.glowColor}, ${currentTheme.glowColor}40)`,
                   opacity: isPlaying ? 0.9 : 0.3,
-                  animation: isPlaying ? `equalizer ${0.3 + Math.random() * 0.8}s ease-in-out infinite alternate` : 'none',
+                  animation: isPlaying ? `equalizer ${spectrumDurations.current[i]}s ease-in-out infinite alternate` : 'none',
                   animationDelay: `${i * 0.04}s`,
                 }}
               />

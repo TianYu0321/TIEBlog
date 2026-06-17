@@ -4,10 +4,32 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
     <title>TieBlog — 炫技个人博客</title>
+    <meta name="description" content="TieBlog 是 Tie 的个人技术博客，展示前端开发、AI 辅助编程、裸眼3D 视觉效果等技术项目。" />
+    <meta name="author" content="Tie" />
+    <meta name="keywords" content="前端开发, React, Vite, TypeScript, Tailwind CSS, AI Agent, 个人博客" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="TieBlog — 炫技个人博客" />
+    <meta property="og:description" content="TieBlog 是 Tie 的个人技术博客，展示前端开发、AI 辅助编程、裸眼3D 视觉效果等技术项目。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tieblog.vercel.app" />
+    <meta property="og:image" content="/video/poster.jpg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TieBlog — 炫技个人博客" />
+    <meta name="twitter:description" content="TieBlog 是 Tie 的个人技术博客，展示前端开发、AI 辅助编程、裸眼3D 视觉效果等技术项目。" />
+
+    <!-- Google Fonts: 延迟加载，避免阻塞首屏渲染 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

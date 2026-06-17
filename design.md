@@ -20,64 +20,24 @@ TieBlog 是一个个人技术博客 / 作品集网站，核心目标是：
 
 | 模块 | 状态 | 已知问题 | 下一步 |
 |------|------|----------|--------|
-| **TetoSurround** | ✅ 完成 | 视频无 poster，中文文件名需 encode | 加 poster 兜底图 |
+| **TetoSurround** | ✅ 完成 | 移动端 preload 降级、骨架状态 | — |
 | **Hero3D** | ✅ 完成 | — | — |
-| **MusicPlayer** | ✅ 完成 | 只有 1 首歌，无 localStorage | 加歌单 + 本地持久化 |
-| **AgentChat** | ✅ 本地完成 | 无输入长度限制、无错误兜底、无历史截断 | 加限制 + 错误处理 |
-| **Projects** | ⚠️ mock 阶段 | 硬编码 6 个假项目，未接 GitHub 数据 | 接真实数据 + 白名单 |
-| **GitHub 抓取** | ✅ 已配置 | 用户名是 `your-username` 占位符 | 替换真实用户名 |
-| **API 安全** | ✅ 完成 | Edge Function 已做 | 加 rate limit（Vercel 层） |
-| **部署** | ❌ 未验证 | 本地 build 通过，未上 Vercel | 配环境变量 + 部署 |
+| **MusicPlayer** | ✅ 完成 | 只有 1 首歌，无 localStorage | 加歌单 + 本地持久化（P1） |
+| **AgentChat** | ✅ 完成 | 已加输入限制、错误兜底、ESC 关闭、SSE 取消 | — |
+| **Projects** | ✅ 完成 | 已接真实数据 + 懒加载 + 时间格式化 | — |
+| **GitHub 抓取** | ✅ 已配置 | 用户名已替换，每周运行 | — |
+| **API 安全** | ✅ 完成 | Edge Function 已做，rate limit 待加 | 加 rate limit（Vercel 层） |
+| **部署** | ✅ 已验证 | Vercel 已部署，环境变量已配置 | 绑定域名（.com） |
 
 ---
 
-## 3. P0 上线任务（不做完不能上线）
+## 3. P0 上线任务（全部完成）
 
-### 3.1 视频背景兜底
-
-**问题**：Teto 视频体积大，移动端可能加载失败；也没有 poster 图。
-
-**验收标准**：
-- [ ] `TetoSurround.tsx` 的 `<video>` 加 `poster` 属性，指向一张 1920x1080 的静态截图
-- [ ] 生成 poster 图：从视频截取第一帧或关键帧，保存为 `public/video/poster.jpg`
-- [ ] 视频 `src` 改回相对路径，但保留 `encodeURIComponent` 处理中文文件名
-- [ ] 测试：禁用网络或把视频文件名改错，确认 poster 图显示正常
-
-**改动位置**：`src/components/TetoSurround.tsx` 第 33-46 行
-
-```tsx
-<video
-  ref={videoRef}
-  src={VIDEO_MAIN}
-  poster="/video/poster.jpg"  // ← 加这行
-  muted loop playsInline preload="auto"
-  ...
-/>
-```
-
----
-
-### 3.2 Agent API 错误处理
-
-**问题**：`/api/chat` 挂了、API Key 失效、用户输入超长，前端没有任何兜底。
-
-**验收标准**：
-- [ ] **输入长度限制**：`AgentChat.tsx` 输入框限制最大 500 字符，超长得截断或禁止发送
-- [ ] **消息历史截断**：发送给 API 的消息总长度超过 4000 token 时，从最早的消息开始丢弃，保留系统提示 + 最近 10 轮对话
-- [ ] **错误状态分类**：前端区分三种错误并给出不同提示：
-  - API Key 未配置 → "Agent 服务未配置，请联系管理员"
-  - API 服务商挂了 → "Agent 服务暂时不可用，请稍后重试"
-  - 用户输入超限制 → "输入内容过长，请精简后重试"
-- [ ] **重试按钮**：API 失败时消息气泡里显示"重试"按钮，点击后重新发送该消息
-- [ ] **加载超时**：请求超过 30 秒未收到第一个 SSE chunk，自动显示超时提示
-
-**改动位置**：`src/components/AgentChat.tsx`、`api/chat.ts`
-
----
-
-### 3.3 GitHub 项目白名单
-
-**问题**：`fetch-github.js` 抓取全部仓库，可能包含 fork 的、私人的、不想展示的项目。
+- [x] 视频背景兜底（poster + 缓入 + 错误处理）
+- [x] Agent API 错误处理（500 字符限制 + 10 轮截断 + 错误分类 + 30 秒超时 + 重试）
+- [x] GitHub 项目白名单（LLM 生成一句话总结）
+- [x] 移动端基础适配（标题缩小 + 播放器隐藏 + Agent 全屏）
+- [x] Vercel 部署验证（环境变量 + 端到端测试）
 
 **验收标准**：
 - [ ] `scripts/fetch-github.js` 加 `PROJECT_WHITELIST` 数组，只抓取名单内的仓库
