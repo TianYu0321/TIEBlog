@@ -9,7 +9,7 @@
     "forks": 0,
     "language": "TypeScript",
     "topics": [],
-    "updated_at": "2026-06-17T09:43:29Z",
+    "updated_at": "2026-06-17T10:30:02Z",
     "homepage": "https://tieblog.vercel.app"
   },
   {
@@ -29,7 +29,7 @@
     "id": 1254544047,
     "name": "POE-MARKET",
     "description": "",
-    "summary": "这是一个基于 Python 的 Path of Exile 2 市场行情采集、分析、日报与自然语言对话 Agent 项目。",
+    "summary": "这是一个基于 Python 的 Path of Exile 2 市场行情采集、分析与自然语言对话 Agent 项目。",
     "url": "https://github.com/TianYu0321/POE-MARKET",
     "stars": 0,
     "forks": 0,
