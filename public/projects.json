@@ -1,9 +1,22 @@
 [
   {
+    "id": 1270330438,
+    "name": "TIEBlog",
+    "description": "",
+    "summary": "这是一个基于 TypeScript 的炫技型个人技术博客项目。",
+    "url": "https://github.com/TianYu0321/TIEBlog",
+    "stars": 0,
+    "forks": 0,
+    "language": "TypeScript",
+    "topics": [],
+    "updated_at": "2026-06-20T01:59:14Z",
+    "homepage": "https://tieblog.vercel.app"
+  },
+  {
     "id": 1274306592,
     "name": "pobdCompare",
     "description": "",
-    "summary": "这是一个基于 TypeScript 的代码对比分析项目。",
+    "summary": "这是一个基于 TypeScript 的代码对比工具项目。",
     "url": "https://github.com/TianYu0321/pobdCompare",
     "stars": 0,
     "forks": 0,
@@ -11,19 +24,6 @@
     "topics": [],
     "updated_at": "2026-06-19T17:12:42Z",
     "homepage": null
-  },
-  {
-    "id": 1270330438,
-    "name": "TIEBlog",
-    "description": "",
-    "summary": "这是一个基于 TypeScript 的炫技型个人技术博客项目，集成了裸眼3D视频环绕、AI Agent聊天和环境光主题系统。",
-    "url": "https://github.com/TianYu0321/TIEBlog",
-    "stars": 0,
-    "forks": 0,
-    "language": "TypeScript",
-    "topics": [],
-    "updated_at": "2026-06-19T02:37:34Z",
-    "homepage": "https://tieblog.vercel.app"
   },
   {
     "id": 1233825431,
@@ -42,7 +42,7 @@
     "id": 1254544047,
     "name": "POE-MARKET",
     "description": "",
-    "summary": "这是一个基于 Python 的 Path of Exile 2 市场行情采集、分析、日报与自然语言对话 Agent 项目。",
+    "summary": "这是一个基于 Python 的 Path of Exile 2 市场行情采集、分析与自然语言对话 Agent 项目。",
     "url": "https://github.com/TianYu0321/POE-MARKET",
     "stars": 0,
     "forks": 0,
