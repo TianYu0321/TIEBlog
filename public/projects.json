@@ -9,14 +9,14 @@
     "forks": 0,
     "language": "TypeScript",
     "topics": [],
-    "updated_at": "2026-06-23T01:53:42Z",
+    "updated_at": "2026-06-24T01:52:05Z",
     "homepage": "https://tieblog.vercel.app"
   },
   {
     "id": 1274306592,
     "name": "pobdCompare",
     "description": "",
-    "summary": "这是一个基于 TypeScript 的代码对比工具项目。",
+    "summary": "这是一个基于 TypeScript 的代码对比分析项目。",
     "url": "https://github.com/TianYu0321/pobdCompare",
     "stars": 0,
     "forks": 0,
