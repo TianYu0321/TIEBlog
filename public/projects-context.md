@@ -10,7 +10,7 @@
 - 标签: 无
 - 星标: 0 ⭐
 - 链接: https://github.com/TianYu0321/TIEBlog
-- 更新: 2026-07-10T01:22:05Z
+- 更新: 2026-07-11T01:15:43Z
 - README摘要: # TieBlog  > Tie 的个人技术博客 — 裸眼3D Teto 视频环绕 + AI Agent + 环境光主题系统  **在线访问**: [https://tieblog.vercel.app](https://tieblog.vercel.app)  ---  ## 项目介绍  TieBlog 是一个**炫技型个人作品集网站**，核心目标是展示前端开发能力、AI 辅助开发实践，以及个人 GitHub 项目。  ### 核心特性  | 特性 | 说明 | |------|------| | **裸眼3D 视频环绕** | 全屏 Teto 视频背景，CSS 3D 缓入效果，GPU 加速渲染 | | **环境光主题系统** | 5 种预设主题（Matrix/Pure/Neon/Lo-Fi/Glitch），视频 + 音乐联动 | | **AI Agent 聊天** | 基于项目上下文的专属 AI，只回答技术问题，拒绝闲聊 | | **GitHub 自动同步** | 每周自动抓取 GitHub 仓库，LLM 生成一句话总结 | | **音乐播放器** | 右侧玻璃态面板，频谱可视化，
 
 ---
@@ -40,7 +40,7 @@
 ---
 
 ## POE-MARKET
-- 总结: 这是一个基于 Python 的 Path of Exile 2 市场行情采集、分析、日报与自然语言对话 Agent 项目。
+- 总结: 这是一个基于 Python 的 Path of Exile 2 市场行情采集、分析与自然语言对话 Agent 项目。
 - 描述: 暂无描述
 - 语言: Python
 - 标签: 无
