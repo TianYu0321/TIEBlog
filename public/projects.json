@@ -9,7 +9,7 @@
     "forks": 0,
     "language": "TypeScript",
     "topics": [],
-    "updated_at": "2026-07-22T01:13:53Z",
+    "updated_at": "2026-07-23T01:21:35Z",
     "homepage": "https://tieblog.vercel.app"
   },
   {
@@ -29,7 +29,7 @@
     "id": 1233825431,
     "name": "Hero-Battle",
     "description": "",
-    "summary": "这是一个基于 GDScript 的英雄对战游戏项目。",
+    "summary": "这是一个基于 GDScript 的回合制英雄对战游戏项目。",
     "url": "https://github.com/TianYu0321/Hero-Battle",
     "stars": 0,
     "forks": 0,
